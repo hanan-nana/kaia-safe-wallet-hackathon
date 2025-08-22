@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+# Vite
+.vite/
+
+# Environment variables
+.env*
+
+# Editor
+.vscode/
+.cursor/
+
+# OS
+.DS_Store
+
+# Cache
+*.tsbuildinfo
+.eslintcache
