@@ -1,12 +1,12 @@
 import React from "react";
-import Button from "../Button/Button.tsx";
-import ServerInfo from "../ServerInfo/ServerInfo.tsx";
+import Button from "../../button/Button.tsx";
+import ServerInfo from "../header/ServerInfo.tsx";
 import NavigationItem from "./NavigationItem.tsx";
 import { ChevronRight } from "lucide-react";
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="w-72 bg-white border-r border-gray-200 flex flex-col p-4">
+    <div className="w-72 bg-glass-primary border-r border-gray-200 flex flex-col p-4">
       {/* Logo */}
       <div className="mb-6">
         <div className="flex items-center gap-1 text-xl font-semibold">

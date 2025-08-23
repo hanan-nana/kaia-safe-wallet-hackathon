@@ -1,6 +1,6 @@
 import React from "react";
 import { Settings } from "lucide-react";
-import { mockServerInfo } from "../../data/mockServerInfo";
+import { mockServerInfo } from "../../../data/mockServerInfo";
 
 const ServerInfo: React.FC = () => {
   const { connection, network } = mockServerInfo;
