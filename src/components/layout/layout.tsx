@@ -10,11 +10,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Background />
 
       {/* 콘텐츠 레이어 */}
-      <div className="relative z-10 flex w-full bg-glass-intermediate backdrop-blur-lg">
-        <Sidebar />
-        <div className="flex-1 flex flex-col overflow-hidden mr-4 mb-4">
-          <Header />
-          <div className="flex-1 bg-glass-intermediate overflow-auto rounded-lg">
+      <div className="relative z-10 flex flex-col w-full bg-glass-intermediate backdrop-blur-lg">
+        <Header />
+        <div className="flex-1 flex p-2 pt-0 gap-3">
+          <div className="bg-glass-dark-secondary rounded-xl">
+            <Sidebar />
+          </div>
+          <div className="flex-1 bg-glass-intermediate overflow-auto shadow-glass rounded-xl">
             {children}
           </div>
         </div>
