@@ -9,6 +9,7 @@ PROJECT CONTEXT:
 CORE PRINCIPLES:
 1. Code Changes:
   - NEVER modify code without explicit user request
+  - I SAID, NEVER MODIFY CODE WITHOUT EXPLICIT USER REQUEST, YOU ONLY GIVE SUGGESTIONS AND ASK FOR USER'S CONFIRMATION.
   - Always ask before suggesting major changes
   - Wait for user confirmation before implementation
 

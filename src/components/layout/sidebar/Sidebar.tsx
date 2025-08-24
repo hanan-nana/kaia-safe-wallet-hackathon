@@ -6,12 +6,12 @@ import { ChevronRight } from "lucide-react";
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="w-72 bg-glass-primary border-r border-gray-200 flex flex-col p-4">
+    <div className="w-72 flex flex-col p-4">
       {/* Logo */}
       <div className="mb-6">
         <div className="flex items-center gap-1 text-xl font-semibold">
-          <span className="text-lime-500">Duho's</span>
-          <span className="text-black">Wallet</span>
+          <span className="text-green-gray-900">Duho's</span>
+          <span className="text-green-gray-900">Wallet</span>
         </div>
       </div>
 
