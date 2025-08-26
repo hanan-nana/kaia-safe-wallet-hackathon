@@ -1,4 +1,3 @@
-import React from "react";
 import ConnectButton from "../../button/ConnectButton";
 
 const Header = () => {
