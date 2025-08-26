@@ -1,0 +1,135 @@
+:root {
+  /* Tailwind color mappings */
+  --tw-gray-100: #e0e7e0;
+  --tw-gray-200: #c7cec7;
+  --tw-gray-300: #adb4ae;
+  --tw-gray-400: #949a95;
+  --tw-gray-500: #7a807b;
+  --tw-gray-600: #616662;
+  --tw-gray-700: #474c49;
+  --tw-gray-800: #2d3230;
+  --tw-gray-900: #131816;
+
+  --tw-green-gray-100: #e0e7e0;
+  --tw-green-gray-200: #c7cec7;
+  --tw-green-gray-300: #adb4ae;
+  --tw-green-gray-400: #949a95;
+  --tw-green-gray-500: #7a807b;
+  --tw-green-gray-600: #616662;
+  --tw-green-gray-700: #474c49;
+  --tw-green-gray-800: #2d3230;
+  --tw-green-gray-900: #131816;
+
+  /* Base w3o variables */
+  --w3o-background-color: white;
+  --w3o-foreground-color: var(--tw-gray-100);
+  --w3o-text-color: var(--tw-gray-900);
+  --w3o-border-color: var(--tw-gray-200);
+  --w3o-action-color: var(--tw-green-gray-600);
+  --w3o-border-radius: 6px;
+  --w3o-font-family: "Pretendard", sans-serif;
+
+  --onboard-border-radius-1: var(--w3o-border-radius);
+  --onboard-border-radius-2: var(--w3o-border-radius);
+  --onboard-border-radius-3: var(--w3o-border-radius);
+
+  /* Palette */
+  --onboard-white: #ffffff;
+  --onboard-black: var(--tw-gray-900);
+
+  /* Primary scale using green-gray */
+  --onboard-primary-1: var(--tw-green-gray-100);
+  --onboard-primary-100: var(--tw-green-gray-100);
+  --onboard-primary-200: var(--tw-green-gray-200);
+  --onboard-primary-300: var(--tw-green-gray-300);
+  --onboard-primary-400: var(--tw-green-gray-400);
+  --onboard-primary-500: var(--tw-green-gray-500);
+  --onboard-primary-600: var(--tw-green-gray-600);
+  --onboard-primary-700: var(--tw-green-gray-700);
+
+  /* Gray scale */
+  --onboard-gray-100: var(--tw-gray-100);
+  --onboard-gray-200: var(--tw-gray-200);
+  --onboard-gray-300: var(--tw-gray-300);
+  --onboard-gray-400: var(--tw-gray-400);
+  --onboard-gray-500: var(--tw-gray-500);
+  --onboard-gray-600: var(--tw-gray-600);
+  --onboard-gray-700: var(--tw-gray-700);
+
+  /* Success colors using green tones */
+  --onboard-success-100: #dcfce7;
+  --onboard-success-600: #16a34a;
+  --onboard-success-700: #15803d;
+
+  /* Danger colors using red tones */
+  --onboard-danger-500: #ef4444;
+  --onboard-danger-600: #dc2626;
+  --onboard-danger-700: #b91c1c;
+
+  /* Warning colors using yellow/orange tones */
+  --onboard-warning-100: #fef3c7;
+  --onboard-warning-400: #fbbf24;
+  --onboard-warning-500: #f59e0b;
+  --onboard-warning-600: #d97706;
+  --onboard-warning-700: #b45309;
+
+  /* Connect modal */
+  --onboard-modal-z-index: 1301;
+
+  --onboard-modal-backdrop: rgba(99, 102, 105, 0.75);
+
+  --onboard-modal-border-radius: var(--w3o-border-radius);
+
+  --onboard-connect-sidebar-progress-background: var(--tw-gray-200);
+
+  --onboard-link-color: var(--tw-green-gray-600);
+
+  --onboard-wallet-app-icon-border-color: var(--tw-gray-200);
+  --onboard-wallet-app-icon-background-transparent: rgba(255, 255, 255, 0.2);
+  --onboard-wallet-app-icon-background-light-gray: rgba(255, 255, 255, 0.5);
+
+  --onboard-wallet-button-border-radius: var(--w3o-border-radius);
+  --onboard-wallet-button-background-hover: var(--tw-gray-100);
+
+  /* Account select (modal) */
+
+  --account-select-white: var(--onboard-white);
+  --account-select-black: var(--onboard-black);
+
+  --account-select-primary-100: var(--onboard-primary-100);
+  --account-select-primary-200: var(--onboard-primary-200);
+  --account-select-primary-300: var(--onboard-primary-300);
+  --account-select-primary-500: var(--onboard-primary-500);
+  --account-select-primary-600: var(--onboard-primary-600);
+
+  --account-select-gray-100: var(--onboard-gray-100);
+  --account-select-gray-200: var(--onboard-gray-200);
+  --account-select-gray-300: var(--onboard-gray-300);
+  --account-select-gray-500: var(--onboard-gray-500);
+  --account-select-gray-700: var(--onboard-gray-700);
+
+  --account-select-danger-500: var(--onboard-danger-500);
+
+  --onboard-account-select-modal-z-index: 1301;
+}
+
+#walletconnect-qrcode-modal {
+  padding: 20px !important;
+}
+
+#walletconnect-wrapper {
+  color: #162d45;
+}
+
+#walletconnect-wrapper .walletconnect-modal__footer {
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/* Keystone modal */
+#kv_sdk_container + .ReactModalPortal > div {
+  z-index: 1301 !important;
+}
+#kv_sdk_container + .ReactModalPortal .ReactModal__Content {
+  padding: 0 !important;
+}

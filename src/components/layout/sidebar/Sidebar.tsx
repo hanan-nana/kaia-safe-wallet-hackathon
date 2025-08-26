@@ -3,34 +3,15 @@ import Button from "../../button/Button.tsx";
 import ServerInfo from "../header/ServerInfo.tsx";
 import NavigationItem from "./NavigationItem.tsx";
 import { ChevronRight } from "lucide-react";
+import ConnectStatus from "./ConnectStatus.tsx";
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="w-72 flex flex-col p-4 pb-2">
-      {/* Logo */}
-      <div className="mb-6">
-        <div className="flex items-center gap-1 text-xl font-semibold">
-          <span className="text-green-gray-900">Duho's</span>
-          <span className="text-green-gray-900">Wallet</span>
-        </div>
-      </div>
-
+    <div className="w-72 flex flex-col">
       {/* Wallet Info */}
       <div className="mb-8">
         {/* Network Badge */}
-        <div className="flex items-center p-3 bg-gray-800 rounded-lg mb-4 text-white">
-          <div className="w-10 h-10 bg-lime-500 rounded-full flex items-center justify-center font-bold text-white mr-3">
-            KN
-          </div>
-          <div className="flex-1">
-            <div className="text-sm font-medium mb-0.5">KAIROS Safe Net</div>
-            <div className="text-xs text-gray-400 mb-0.5">
-              kairos:0xf166...42b6
-            </div>
-            <div className="text-xs text-gray-400">0.00 USD</div>
-          </div>
-          <ChevronRight size={16} />
-        </div>
+        <ConnectStatus />
 
         {/* New Transaction Button */}
         <Button variant="primary" size="lg" fullWidth>
