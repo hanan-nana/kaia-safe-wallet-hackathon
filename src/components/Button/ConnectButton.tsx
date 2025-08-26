@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import useConnectWallet from "../../hooks/useConnect";
 import useDisconnectWallet from "../../hooks/useDisconnectWallet";
-import useOnboard, { initOnboard } from "../../hooks/useOnboard";
-import { getConnectedWallet, type ConnectedWallet } from "../../hooks/utils";
+import useOnboard from "../../hooks/useOnboard";
+import {
+  getConnectedWallet,
+  type ConnectedWallet,
+} from "../../utils/ConnectedWallet";
 
 const ConnectButton = () => {
   const onboard = useOnboard();

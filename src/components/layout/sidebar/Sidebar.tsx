@@ -20,10 +20,10 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex flex-col gap-1 mb-6">
+      {/* <nav className="flex flex-col gap-1 mb-6">
         <NavigationItem to="/">Home</NavigationItem>
-        <NavigationItem to="/transactions">Transactions</NavigationItem>
-      </nav>
+        <NavigationItem to="/">Transactions</NavigationItem>
+      </nav> */}
 
       {/* Server Info at bottom */}
       <div className="mt-auto">
