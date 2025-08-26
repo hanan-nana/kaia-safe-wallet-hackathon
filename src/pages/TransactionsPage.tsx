@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import TransactionDetails from "../components/TransactionDetails/TransactionDetails.tsx";
-import ServerInfo from "../components/ServerInfo/ServerInfo.tsx";
-import { Filter } from "lucide-react";
+import { useState } from "react";
+import TransactionQueue from "../components/TransactionQueue/TransactionQueue";
+import { mockTransactionQueue } from "../data/mockTransactionQueue";
 
 type TabType = "queue" | "history" | "messages";
 
@@ -13,10 +12,13 @@ interface Tab {
 const TransactionPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>("history");
 
+  // Queue count for tab display
+  const queueCount = mockTransactionQueue.length;
+
   const tabs: Tab[] = [
     { id: "queue", label: "Queue" },
     { id: "history", label: "History" },
-    { id: "messages", label: "Messages" },
+    // { id: "messages", label: "Messages" },
   ];
 
   return (
@@ -38,19 +40,28 @@ const TransactionPage: React.FC = () => {
             }`}
             onClick={() => setActiveTab(tab.id)}
           >
-            {tab.label}
+            <div className="flex items-center gap-2">
+              <span>{tab.label}</span>
+              {tab.id === "queue" && queueCount > 0 && (
+                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                  {queueCount}
+                </span>
+              )}
+            </div>
           </button>
         ))}
       </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
-        {activeTab === "history" && <TransactionDetails />}
-        {activeTab === "queue" && (
+        {activeTab === "history" && (
           <div className="flex items-center justify-center h-48 text-gray-600 text-sm">
-            No pending transactions
+            <div className="text-center">
+              <p>No transaction history</p>
+            </div>
           </div>
         )}
+        {activeTab === "queue" && <TransactionQueue />}
         {activeTab === "messages" && (
           <div className="flex items-center justify-center h-48 text-gray-600 text-sm">
             No messages
