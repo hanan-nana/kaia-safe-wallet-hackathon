@@ -1,35 +1,58 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useWalletDeployment } from "../../hooks/useWalletDeployment";
+import { useWalletAccount } from "../../hooks/useWalletAccount";
 
-export const WalletDeployment = () => {
+interface WalletDeploymentProps {
+  onSuccess?: () => void;
+}
+
+export const WalletDeployment = ({ onSuccess }: WalletDeploymentProps) => {
   const [destructAddress, setDestructAddress] = useState("");
   const [duration, setDuration] = useState(3600); // 1시간 기본값
-  const [account, setAccount] = useState("");
 
+  const { account, isConnected } = useWalletAccount();
   const { deploymentStatus, deployContract, resetDeploymentStatus } =
     useWalletDeployment();
 
   const handleDeploy = async () => {
-    if (!destructAddress || !account) {
-      alert("Please fill in all fields");
+    if (!isConnected) {
+      alert("Please connect your wallet first");
       return;
     }
 
-    await deployContract(destructAddress, duration, account);
+    if (!destructAddress) {
+      alert("Please fill in the destruct wallet address");
+      return;
+    }
+
+    const result = await deployContract(destructAddress, duration, account);
+    if (result && onSuccess) {
+      onSuccess();
+    }
   };
 
   return (
     <div className="wallet-deployment">
       <h2>Deploy New Wallet</h2>
 
+      {/* Connected Account Display */}
       <div className="form-group">
-        <label>Your Account Address:</label>
-        <input
-          type="text"
-          value={account}
-          onChange={(e) => setAccount(e.target.value)}
-          placeholder="0x..."
-        />
+        <label>Connected Account:</label>
+        <div className="connected-account">
+          {isConnected && account ? (
+            <div className="account-info">
+              <span className="account-address">
+                {account.slice(0, 6)}...{account.slice(-4)}
+              </span>
+              <span className="status-badge connected">Connected</span>
+            </div>
+          ) : (
+            <div className="account-info">
+              <span className="account-address">Not connected</span>
+              <span className="status-badge disconnected">Disconnected</span>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="form-group">
@@ -53,10 +76,14 @@ export const WalletDeployment = () => {
 
       <button
         onClick={handleDeploy}
-        disabled={deploymentStatus.isDeploying}
+        disabled={deploymentStatus.isDeploying || !isConnected}
         className="btn-primary"
       >
-        {deploymentStatus.isDeploying ? "Deploying..." : "Deploy Contract"}
+        {deploymentStatus.isDeploying
+          ? "Deploying..."
+          : !isConnected
+          ? "Connect Wallet to Deploy"
+          : "Deploy Contract"}
       </button>
 
       {deploymentStatus.txHash && (

@@ -26,9 +26,9 @@ const Sidebar: React.FC = () => {
       </nav> */}
 
       {/* Server Info at bottom */}
-      <div className="mt-auto">
+      {/* <div className="mt-auto">
         <ServerInfo />
-      </div>
+      </div> */}
     </div>
   );
 };

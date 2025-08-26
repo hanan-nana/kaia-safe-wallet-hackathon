@@ -65,3 +65,15 @@ export const addDeployedWalletAtom = atom(
     });
   }
 );
+
+// 선택된 지갑 atom
+export const selectedWalletAtom = atom<{
+  chainId: string;
+  address: string;
+  name: string;
+  creator: string;
+  deployedAt: number;
+  txHash: string;
+  destructAddress?: string;
+  duration?: number;
+} | null>(null);

@@ -11,4 +11,16 @@ export default defineConfig({
   build: {
     outDir: "dist",
   },
+  optimizeDeps: {
+    exclude: [],
+  },
+  define: {
+    global: "globalThis",
+  },
+  resolve: {
+    alias: {
+      buffer: "buffer",
+      process: "process/browser",
+    },
+  },
 });

@@ -3,13 +3,15 @@ import { useCallback } from "react";
 import {
   deploymentStatusAtom,
   addDeployedWalletAtom,
+  selectedWalletAtom,
 } from "../atoms/walletAtoms";
 import { SAFE_WALLET_FACTORY } from "../constants/contracts";
-import Caver from "caver-js";
+import { ethers } from "ethers";
 
 export const useWalletDeployment = () => {
   const [deploymentStatus, setDeploymentStatus] = useAtom(deploymentStatusAtom);
   const [, addDeployedWallet] = useAtom(addDeployedWalletAtom);
+  const [, setSelectedWallet] = useAtom(selectedWalletAtom);
 
   const deployContract = useCallback(
     async (
@@ -36,38 +38,35 @@ export const useWalletDeployment = () => {
       }
 
       try {
-        const caver = new Caver(window.klaytn as any);
-        const factoryContract = new caver.klay.Contract(
-          SAFE_WALLET_FACTORY.ABI as any,
-          SAFE_WALLET_FACTORY.ADDRESS
+        // ethers.js를 사용하여 Klaytn과 상호작용
+        const provider = new ethers.BrowserProvider(window.klaytn as any);
+        const signer = await provider.getSigner();
+
+        const factoryContract = new ethers.Contract(
+          SAFE_WALLET_FACTORY.ADDRESS,
+          SAFE_WALLET_FACTORY.ABI,
+          signer
         );
 
         // 1. 트랜잭션 전송
-        const data = factoryContract.methods
-          .deployContract(destruct_address, duration)
-          .encodeABI();
-        const txParams = {
-          from: account,
-          to: SAFE_WALLET_FACTORY.ADDRESS,
-          data: data,
-          gas: "0x4c4b40",
-        };
-
-        const hash = await window.klaytn.request({
-          method: "eth_sendTransaction",
-          params: [txParams],
-        });
+        const tx = await factoryContract.deployContract(
+          destruct_address,
+          duration,
+          {
+            gasLimit: 5000000, // 0x4c4b40 in decimal
+          }
+        );
 
         // 트랜잭션 해시 업데이트
         setDeploymentStatus((prev) => ({
           ...prev,
-          txHash: hash,
+          txHash: tx.hash,
         }));
 
         // 2. 트랜잭션 완료 대기
-        const receipt = await waitForTransactionReceipt(caver, hash);
+        const receipt = await tx.wait();
 
-        if (receipt.status) {
+        if (receipt.status === 1) {
           // 3. 배포된 주소 추출
           const deployedAddress = getDeployedAddressFromLogs(
             receipt.logs,
@@ -75,7 +74,7 @@ export const useWalletDeployment = () => {
           );
 
           // 4. Jotai store에 추가
-          addDeployedWallet({
+          const walletData = {
             chainId,
             address: deployedAddress,
             name: `Custom Wallet ${deployedAddress.slice(
@@ -83,7 +82,21 @@ export const useWalletDeployment = () => {
               6
             )}...${deployedAddress.slice(-4)}`,
             creator: account,
-            txHash: hash,
+            txHash: tx.hash,
+            destructAddress: destruct_address,
+            duration,
+          };
+
+          addDeployedWallet(walletData);
+
+          // 5. 새로 배포된 지갑을 자동으로 선택
+          setSelectedWallet({
+            chainId,
+            address: deployedAddress,
+            name: walletData.name,
+            creator: account,
+            deployedAt: Date.now(),
+            txHash: tx.hash,
             destructAddress: destruct_address,
             duration,
           });
@@ -91,7 +104,7 @@ export const useWalletDeployment = () => {
           // 최종 상태 업데이트
           setDeploymentStatus({
             isDeploying: false,
-            txHash: hash,
+            txHash: tx.hash,
             error: null,
             deployedAddress,
           });
@@ -107,7 +120,7 @@ export const useWalletDeployment = () => {
         });
       }
     },
-    [setDeploymentStatus, addDeployedWallet]
+    [setDeploymentStatus, addDeployedWallet, setSelectedWallet]
   );
 
   const resetDeploymentStatus = useCallback(() => {
@@ -127,39 +140,16 @@ export const useWalletDeployment = () => {
 };
 
 // 헬퍼 함수들
-const waitForTransactionReceipt = async (
-  caver: any,
-  txHash: string
-): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    const checkReceipt = async () => {
-      try {
-        const receipt = await caver.klay.getTransactionReceipt(txHash);
-        if (receipt) {
-          resolve(receipt);
-        } else {
-          setTimeout(checkReceipt, 1000);
-        }
-      } catch (error) {
-        reject(error);
-      }
-    };
-    checkReceipt();
-  });
-};
-
 const getDeployedAddressFromLogs = (
   logs: any[],
-  factoryContract: any
+  factoryContract: ethers.Contract
 ): string => {
   for (const log of logs) {
     try {
-      const decodedLog = factoryContract.decodeLog(
-        "ContractDeployed",
-        log.data,
-        log.topics
-      );
-      return decodedLog.newContractAddress;
+      const parsedLog = factoryContract.interface.parseLog(log);
+      if (parsedLog && parsedLog.name === "ContractDeployed") {
+        return parsedLog.args.newContractAddress;
+      }
     } catch (e) {
       continue;
     }

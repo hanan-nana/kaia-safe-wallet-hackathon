@@ -5,3 +5,109 @@
 body {
   font-family: "Pretendard", sans-serif;
 }
+
+/* Wallet Deployment Styles */
+.wallet-deployment .form-group {
+  margin-bottom: 1rem;
+}
+
+.wallet-deployment .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.wallet-deployment .form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.wallet-deployment .form-group input:focus {
+  outline: none;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.wallet-deployment .connected-account {
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.wallet-deployment .account-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wallet-deployment .account-address {
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.wallet-deployment .status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.wallet-deployment .status-badge.connected {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.wallet-deployment .status-badge.disconnected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.wallet-deployment .btn-primary {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.wallet-deployment .btn-primary:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.wallet-deployment .btn-primary:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.wallet-deployment .status-info,
+.wallet-deployment .success-info,
+.wallet-deployment .error-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.wallet-deployment .status-info {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.wallet-deployment .success-info {
+  background-color: #d1fae5;
+  border: 1px solid #a7f3d0;
+}
+
+.wallet-deployment .error-info {
+  background-color: #fee2e2;
+  border: 1px solid #fca5a5;
+}
