@@ -1,21 +1,16 @@
-import { useState, useEffect } from "react";
 import { Shield, AlertTriangle, XCircle, CheckCircle } from "lucide-react";
-import {
-  QueuedTransaction,
-  mockTransactionQueue,
-} from "../../data/mockTransactionQueue";
+import { useAtomValue } from "jotai";
+import { selectedWalletAtom } from "../../atoms/walletAtoms";
+import { useQueueApi } from "../../hooks/useQueueApi";
+import { QueueItem } from "../../api/types";
 
 const TransactionQueue = () => {
-  const [queuedTransactions, setQueuedTransactions] = useState<
-    QueuedTransaction[]
-  >([]);
+  const selectedWallet = useAtomValue(selectedWalletAtom);
+  const { queue, loading, error, deleteItem, deleteLoading } = useQueueApi(
+    selectedWallet?.address || null
+  );
 
-  useEffect(() => {
-    // Load initial mock data with analysis results already complete
-    setQueuedTransactions(mockTransactionQueue);
-  }, []);
-
-  const getStatusIcon = (status: QueuedTransaction["status"]) => {
+  const getStatusIcon = (status: QueueItem["type"]) => {
     switch (status) {
       case "safe":
         return <CheckCircle className="w-4 h-4 text-green-500" />;
@@ -28,7 +23,7 @@ const TransactionQueue = () => {
     }
   };
 
-  const getStatusColor = (status: QueuedTransaction["status"]) => {
+  const getStatusColor = (status: QueueItem["type"]) => {
     switch (status) {
       case "safe":
         return "bg-green-50 border-green-200";
@@ -41,7 +36,7 @@ const TransactionQueue = () => {
     }
   };
 
-  const getStatusText = (status: QueuedTransaction["status"]) => {
+  const getStatusText = (status: QueueItem["type"]) => {
     switch (status) {
       case "safe":
         return "Safe";
@@ -54,33 +49,71 @@ const TransactionQueue = () => {
     }
   };
 
-  const formatTimeAgo = (timestamp: number) => {
-    const seconds = Math.floor((Date.now() - timestamp) / 1000);
-    if (seconds < 60) return `${seconds}s ago`;
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    return `${Math.floor(seconds / 3600)}h ago`;
-  };
-
-  if (queuedTransactions.length === 0) {
+  // Safe Wallet이 선택되지 않은 경우
+  if (!selectedWallet) {
     return (
       <div className="flex items-center justify-center h-48 text-gray-600 text-sm">
         <div className="text-center">
           <Shield className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-          <p>No transactions in queue</p>
+          <p>Safe Wallet을 선택해주세요</p>
         </div>
       </div>
     );
   }
 
+  // 로딩 상태
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-48 text-gray-600 text-sm">
+        <div className="text-center">
+          <Shield className="w-8 h-8 text-gray-400 mx-auto mb-2 animate-pulse" />
+          <p>거래 큐를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 에러 상태
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-48 text-red-600 text-sm">
+        <div className="text-center">
+          <XCircle className="w-8 h-8 text-red-400 mx-auto mb-2" />
+          <p>에러: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 빈 큐 상태
+  if (queue.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-48 text-gray-600 text-sm">
+        <div className="text-center">
+          <Shield className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+          <p>대기 중인 거래가 없습니다</p>
+        </div>
+      </div>
+    );
+  }
+
+  const handleDelete = async (index: number) => {
+    const success = await deleteItem(index);
+    if (!success) {
+      // 에러는 이미 useQueueApi에서 처리됨
+      console.log("거래 삭제에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="space-y-4">
       {/* Queue List */}
       <div className="space-y-3">
-        {queuedTransactions.map((tx) => (
+        {queue.map((item) => (
           <div
-            key={tx.id}
+            key={item.index}
             className={`border rounded-lg p-4 transition-all ${getStatusColor(
-              tx.status
+              item.type
             )}`}
           >
             <div className="flex items-start justify-between">
@@ -88,35 +121,39 @@ const TransactionQueue = () => {
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
                   <span className="text-sm font-mono text-gray-500">
-                    #{tx.id}
+                    #{item.index}
                   </span>
-                  {getStatusIcon(tx.status)}
+                  {getStatusIcon(item.type)}
                   <span
                     className={`text-sm font-medium ${
-                      tx.status === "safe"
+                      item.type === "safe"
                         ? "text-green-700"
-                        : tx.status === "risky"
+                        : item.type === "risky"
                         ? "text-yellow-700"
-                        : tx.status === "dangerous"
+                        : item.type === "dangerous"
                         ? "text-red-700"
                         : "text-gray-700"
                     }`}
                   >
-                    {getStatusText(tx.status)}
+                    {getStatusText(item.type)}
                   </span>
                 </div>
 
-                <p className="text-gray-900">{tx.description}</p>
+                <p className="text-gray-900">{item.description}</p>
               </div>
 
               {/* Right side - Actions */}
               <div className="flex flex-col gap-2 ml-4">
                 <div className="flex flex-col gap-1">
-                  <button className="text-xs bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700">
+                  <button className="text-xs bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed">
                     실행
                   </button>
-                  <button className="text-xs bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700">
-                    차단
+                  <button
+                    className="text-xs bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => handleDelete(item.index)}
+                    disabled={deleteLoading}
+                  >
+                    {deleteLoading ? "삭제중..." : "차단"}
                   </button>
                 </div>
               </div>

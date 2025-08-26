@@ -1,8 +1,4 @@
 import React from "react";
-import Button from "../../button/Button.tsx";
-import ServerInfo from "../header/ServerInfo.tsx";
-import NavigationItem from "./NavigationItem.tsx";
-import { ChevronRight } from "lucide-react";
 import ConnectStatus from "./ConnectStatus.tsx";
 
 const Sidebar: React.FC = () => {
@@ -14,9 +10,9 @@ const Sidebar: React.FC = () => {
         <ConnectStatus />
 
         {/* New Transaction Button */}
-        <Button variant="primary" size="lg" fullWidth>
+        {/* <Button variant="primary" size="lg" fullWidth>
           New transaction
-        </Button>
+        </Button> */}
       </div>
 
       {/* Navigation */}

@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useAtomValue } from "jotai";
 import TransactionQueue from "../components/TransactionQueue/TransactionQueue";
-import { mockTransactionQueue } from "../data/mockTransactionQueue";
+import { selectedWalletAtom } from "../atoms/walletAtoms";
+import { useQueueApi } from "../hooks/useQueueApi";
 
 type TabType = "queue" | "history" | "messages";
 
@@ -10,10 +12,12 @@ interface Tab {
 }
 
 const TransactionPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabType>("history");
+  const [activeTab, setActiveTab] = useState<TabType>("queue");
+  const selectedWallet = useAtomValue(selectedWalletAtom);
 
-  // Queue count for tab display
-  const queueCount = mockTransactionQueue.length;
+  // Queue count for tab display - API에서 가져온 실제 큐 개수
+  const { queue } = useQueueApi(selectedWallet?.address || null);
+  const queueCount = queue.length;
 
   const tabs: Tab[] = [
     { id: "queue", label: "Queue" },
