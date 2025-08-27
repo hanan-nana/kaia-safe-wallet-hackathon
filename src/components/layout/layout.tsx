@@ -3,13 +3,13 @@ import Background from "./Background.tsx";
 import ConnectOnlyLayout from "./ConnectOnlyLayout";
 import { useWalletAccount } from "../../hooks/useWalletAccount";
 
+
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: LayoutProps) => {
   const { isConnected } = useWalletAccount();
-
   // 지갑이 연결되지 않았을 때는 Connect 화면만 보여줌
   if (!isConnected) {
     return <ConnectOnlyLayout />;

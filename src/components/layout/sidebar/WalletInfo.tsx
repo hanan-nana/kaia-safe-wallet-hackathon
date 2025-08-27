@@ -7,22 +7,26 @@ import { useWalletBalance } from "../../../hooks/useWalletBalance";
 import useDisconnectWallet from "../../../hooks/useDisconnectWallet";
 import LineConnectModal from "../../LineConnectModal";
 import { getLineAccountStatus } from "../../../api/line";
+import { useWalletsApi } from "../../../hooks/useWalletsApi";
 
 const WalletInfo = () => {
   const { account, walletLabel, chainId, isConnected } = useWalletAccount();
   const { balance, loading } = useWalletBalance();
-  const disconnect = useDisconnectWallet();
+  useDisconnectWallet();
   const [copied, setCopied] = useState(false);
   const [showLineModal, setShowLineModal] = useState(false);
   const [lineAccount, setLineAccount] = useAtom(lineAccountAtom);
   const [isLineConnected, setIsLineConnected] = useAtom(isLineConnectedAtom);
+  const { loadWallets } = useWalletsApi();
 
   // 컴포넌트 마운트 시 로컬 스토리지에서 라인 계정 상태 불러오기
   useEffect(() => {
+    console.log("Loading wallets for account:", account);
     const loadLineAccountStatus = async () => {
       if (account) {
         try {
           const storedLineAccount = await getLineAccountStatus(account);
+          loadWallets(account);
           if (storedLineAccount) {
             setLineAccount(storedLineAccount);
             setIsLineConnected(true);

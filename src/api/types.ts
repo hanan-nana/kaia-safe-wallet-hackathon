@@ -31,7 +31,6 @@ export interface QueueApiError {
 export interface Wallet {
   address: string;
   name: string;
-  deployedAt: number;
   destructAddress?: string;
   duration?: number;
 }

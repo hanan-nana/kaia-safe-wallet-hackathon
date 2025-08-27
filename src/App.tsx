@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "./components/layout/Layout.tsx";
+import Layout from "./components/layout/layout.tsx";
 import TransactionsPage from "./pages/TransactionsPage.tsx";
 import { useInitOnboard } from "./hooks/useOnboard";
 

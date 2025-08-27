@@ -4,7 +4,7 @@ import { WalletApiResponse, Wallet } from "./types";
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Mock API 사용 여부 설정
-const USE_MOCK_API = true; // false로 변경하면 실제 API 사용
+const USE_MOCK_API = false; // false로 변경하면 실제 API 사용
 
 /**
  * Safe Wallet 목록을 조회합니다
@@ -27,13 +27,13 @@ const USE_MOCK_API = true; // false로 변경하면 실제 API 사용
  * //   ]
  * // }
  */
-export const fetchWallets = async (): Promise<WalletApiResponse> => {
+export const fetchWallets = async (walletId: string): Promise<WalletApiResponse> => {
   if (USE_MOCK_API) {
     return fetchWalletsMock();
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/wallets`, {
+    const response = await fetch(`${API_BASE_URL}/api/wallets?walletId=${encodeURIComponent(walletId)}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +66,6 @@ const fetchWalletsMock = async (): Promise<WalletApiResponse> => {
     {
       address: "0x742d35Cc6874C41532CF90",
       name: "My Safe Wallet",
-      deployedAt: Date.now() - 86400000,
       destructAddress: "0x456...",
       duration: 86400,
     },

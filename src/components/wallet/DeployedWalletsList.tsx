@@ -27,8 +27,7 @@ export const DeployedWalletsList = ({}: DeployedWalletsListProps) => {
 
           <div className="wallet-details">
             <p>
-              <strong>Deployed:</strong>{" "}
-              {new Date(wallet.deployedAt).toLocaleString()}
+              <strong>Deployed</strong>{" "}
             </p>
             {wallet.destructAddress && (
               <p>

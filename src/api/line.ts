@@ -4,7 +4,7 @@ import { LineAccount } from "../atoms/lineAtoms";
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Mock API 사용 여부 설정
-const USE_MOCK_API = true; // false로 변경하면 실제 API 사용
+const USE_MOCK_API = false; // false로 변경하면 실제 API 사용
 
 // 로컬 스토리지 키
 const LINE_ACCOUNT_STORAGE_KEY = "line_account_data";
