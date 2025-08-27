@@ -1,4 +1,4 @@
-import ConnectButton from "../button/ConnectButton";
+import ConnectButton from "../Button/ConnectButton";
 import Background from "./Background";
 
 const ConnectOnlyLayout = () => {

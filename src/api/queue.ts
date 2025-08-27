@@ -9,7 +9,7 @@ import {
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Mock API 사용 여부 설정
-const USE_MOCK_API = true; // false로 변경하면 실제 API 사용
+const USE_MOCK_API = false; // false로 변경하면 실제 API 사용
 
 /**
  * riskScore를 type으로 분류하는 함수

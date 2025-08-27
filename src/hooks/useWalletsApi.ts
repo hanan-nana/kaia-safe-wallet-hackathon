@@ -13,12 +13,12 @@ export const useWalletsApi = () => {
   const [error, setError] = useAtom(walletsErrorAtom);
 
   // 지갑 목록 조회
-  const loadWallets = useCallback(async () => {
+  const loadWallets = useCallback(async (account : string) => {
     setLoading(true);
     setError(null);
-
+    console.log("Loading wallets for account:", account);
     try {
-      const response = await fetchWallets();
+      const response = await fetchWallets(account);
       setWallets(response.data);
     } catch (err: any) {
       setError(err.message || "Failed to load wallets");

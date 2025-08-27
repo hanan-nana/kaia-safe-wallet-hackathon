@@ -4,7 +4,7 @@ import TransactionQueue from "../components/TransactionQueue/TransactionQueue";
 import { selectedWalletAtom, walletsAtom } from "../atoms/walletAtoms";
 import { useQueueApi } from "../hooks/useQueueApi";
 import { WalletDeployment } from "../components/wallet";
-import { Plus, X } from "lucide-react";
+import { X } from "lucide-react";
 
 type TabType = "queue" | "history" | "messages";
 
