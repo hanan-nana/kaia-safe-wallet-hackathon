@@ -1,12 +1,22 @@
-import React from "react";
 import ConnectStatus from "./ConnectStatus.tsx";
+import WalletInfo from "./WalletInfo.tsx";
 
-const Sidebar: React.FC = () => {
+const Sidebar = () => {
   return (
-    <div className="w-72 flex flex-col">
-      {/* Wallet Info */}
+    <div className="w-64 flex flex-col">
+      {/* Header Section - Logo only */}
+      <div className="mb-6">
+        {/* Logo */}
+        <div className="text-lg font-bold text-center py-3">HOHO Wallet</div>
+      </div>
+
+      {/* Wallet Info Summary */}
+      <div className="mb-6">
+        <WalletInfo />
+      </div>
+
+      {/* Safe Wallet Management */}
       <div className="mb-8">
-        {/* Network Badge */}
         <ConnectStatus />
 
         {/* New Transaction Button */}

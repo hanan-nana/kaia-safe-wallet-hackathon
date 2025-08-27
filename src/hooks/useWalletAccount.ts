@@ -4,6 +4,8 @@ import { getConnectedWallet } from "./utils";
 
 export const useWalletAccount = () => {
   const [account, setAccount] = useState<string>("");
+  const [walletLabel, setWalletLabel] = useState<string>("");
+  const [chainId, setChainId] = useState<string>("");
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const onboard = useOnboard();
 
@@ -11,6 +13,8 @@ export const useWalletAccount = () => {
     if (!onboard) {
       // onboard가 초기화되지 않았으면 초기화 상태로
       setAccount("");
+      setWalletLabel("");
+      setChainId("");
       setIsConnected(false);
       return;
     }
@@ -21,9 +25,13 @@ export const useWalletAccount = () => {
 
       if (connectedWallet) {
         setAccount(connectedWallet.address);
+        setWalletLabel(connectedWallet.label);
+        setChainId(connectedWallet.chainId);
         setIsConnected(true);
       } else {
         setAccount("");
+        setWalletLabel("");
+        setChainId("");
         setIsConnected(false);
       }
     };
@@ -43,5 +51,5 @@ export const useWalletAccount = () => {
     };
   }, [onboard]);
 
-  return { account, isConnected };
+  return { account, walletLabel, chainId, isConnected };
 };

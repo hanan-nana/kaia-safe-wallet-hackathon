@@ -1,22 +1,31 @@
-import React from "react";
 import Sidebar from "./sidebar/Sidebar.tsx";
-import Header from "./header/Header.tsx";
 import Background from "./Background.tsx";
+import ConnectOnlyLayout from "./ConnectOnlyLayout";
+import { useWalletAccount } from "../../hooks/useWalletAccount";
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
+  const { isConnected } = useWalletAccount();
+
+  // 지갑이 연결되지 않았을 때는 Connect 화면만 보여줌
+  if (!isConnected) {
+    return <ConnectOnlyLayout />;
+  }
+
+  // 지갑이 연결되었을 때는 사이드바와 메인 콘텐츠 보여줌
   return (
     <div className="relative flex h-screen overflow-hidden">
       {/* 커스텀 컬러 균일한 그라디언트 배경 */}
       <Background />
 
       {/* 콘텐츠 레이어 */}
-      <div className="relative z-10 flex flex-col w-full bg-glass-intermediate backdrop-blur-lg">
-        <Header />
-        <div className="flex-1 flex p-2 pt-0 gap-3">
-          <Sidebar />
-          <div className="flex-1 bg-glass-intermediate overflow-auto shadow-glass rounded-xl">
-            {children}
-          </div>
+      <div className="relative z-10 flex w-full bg-glass-intermediate backdrop-blur-lg p-2 gap-3">
+        <Sidebar />
+        <div className="flex-1 bg-glass-intermediate overflow-auto shadow-glass rounded-xl">
+          {children}
         </div>
       </div>
     </div>
