@@ -1,6 +1,6 @@
 import type { WalletInit } from "@web3-onboard/common";
 import { createEIP1193Provider } from "@web3-onboard/common";
-import Caver from "caver-js";
+// import Caver from "caver-js"; // TODO: caver-js 설치 필요
 
 const KAIAWALLET_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" width="72" height="72">
   <rect width="72" height="72" rx="12" fill="#1a73e8"/>
@@ -15,43 +15,37 @@ function kaiaWallet(): WalletInit {
       label: "KaiaWallet",
       injectedNamespace: "klaytn",
       getIcon: async () => KAIAWALLET_SVG,
-      getInterface: async (interfaceData: any) => {
+      getInterface: async (_interfaceData: any) => {
         const provider: any = window.klaytn;
         if (!provider) {
           throw new Error("Please install KaiaWallet");
         }
 
-        const chains = interfaceData.chains;
-        const externalChainsCaver: any = {};
-        for (let i = 0; i < chains.length; i++) {
-          externalChainsCaver[chains[i].id] = new Caver(chains[i].publicRpcUrl);
-        }
+        // TODO: caver-js 관련 코드 주석처리
+        // const chains = interfaceData.chains;
+        // const externalChainsCaver: any = {};
+        // for (let i = 0; i < chains.length; i++) {
+        //   externalChainsCaver[chains[i].id] = new Caver(chains[i].publicRpcUrl);
+        // }
 
-        const walletCaver = new Caver(provider);
+        // const walletCaver = new Caver(provider);
 
         return Promise.resolve({
           provider: createEIP1193Provider(provider, {
+            // TODO: caver-js 의존성 해결 후 구현
             eth_sendTransaction: async ({ params }: any) => {
-              let txninput: any = {
-                from: params[0].from,
-                to: params[0].to,
-                gas: params[0].gas,
-              };
-              if (params[0].data) txninput["data"] = params[0].data;
-              if (params[0].value) txninput["value"] = params[0].value;
-
-              let txndata = await walletCaver.klay.sendTransaction(txninput);
-              return txndata.transactionHash as string;
+              // 임시로 기본 provider 사용
+              return provider.request({
+                method: "eth_sendTransaction",
+                params,
+              });
             },
             eth_getBalance: async ({ params }: any) => {
-              let networkVersion = walletCaver.utils.toHex(
-                provider.networkVersion
-              );
-              let selectedAddress = params?.[0] || "";
-              let balance = await externalChainsCaver[
-                networkVersion
-              ].klay.getBalance(selectedAddress);
-              return balance;
+              // 임시로 기본 provider 사용
+              return provider.request({
+                method: "eth_getBalance",
+                params,
+              });
             },
           }),
         });

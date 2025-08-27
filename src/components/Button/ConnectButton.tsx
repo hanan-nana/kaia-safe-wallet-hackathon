@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useConnectWallet from "../../hooks/useConnect";
 import useDisconnectWallet from "../../hooks/useDisconnectWallet";
 import useOnboard from "../../hooks/useOnboard";

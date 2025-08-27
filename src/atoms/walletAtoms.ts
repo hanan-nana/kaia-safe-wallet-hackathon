@@ -1,19 +1,5 @@
 import { atom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
-
-// 배포된 지갑들을 저장하는 atom (localStorage에 지속)
-export const deployedWalletsAtom = atomWithStorage<{
-  [chainId: string]: {
-    [address: string]: {
-      name: string;
-      creator: string;
-      deployedAt: number;
-      txHash: string;
-      destructAddress?: string;
-      duration?: number;
-    };
-  };
-}>("deployedWallets", {});
+import { Wallet } from "../api/types";
 
 // 현재 배포 중인 상태
 export const deploymentStatusAtom = atom<{
@@ -28,52 +14,23 @@ export const deploymentStatusAtom = atom<{
   deployedAddress: null,
 });
 
+// API로부터 가져온 지갑들을 저장하는 atom
+export const walletsAtom = atom<{ [address: string]: Wallet }>({});
+
+// 지갑 로딩 상태
+export const walletsLoadingAtom = atom<boolean>(false);
+
+// 지갑 API 에러 상태
+export const walletsErrorAtom = atom<string | null>(null);
+
 // 특정 체인의 배포된 지갑들만 가져오는 derived atom
 export const deployedWalletsByChainAtom = atom((get) => {
-  const deployedWallets = get(deployedWalletsAtom);
-  return (chainId: string) => deployedWallets[chainId] || {};
+  const wallets = get(walletsAtom);
+  return (chainId: string) =>
+    Object.fromEntries(
+      Object.entries(wallets).filter(([, wallet]) => wallet.chainId === chainId)
+    );
 });
 
-// 배포된 지갑 추가하는 write atom
-export const addDeployedWalletAtom = atom(
-  null,
-  (
-    get,
-    set,
-    wallet: {
-      chainId: string;
-      address: string;
-      name: string;
-      creator: string;
-      txHash: string;
-      destructAddress?: string;
-      duration?: number;
-    }
-  ) => {
-    const current = get(deployedWalletsAtom);
-    const { chainId, address, ...walletData } = wallet;
-
-    set(deployedWalletsAtom, {
-      ...current,
-      [chainId]: {
-        ...current[chainId],
-        [address]: {
-          ...walletData,
-          deployedAt: Date.now(),
-        },
-      },
-    });
-  }
-);
-
 // 선택된 지갑 atom
-export const selectedWalletAtom = atom<{
-  chainId: string;
-  address: string;
-  name: string;
-  creator: string;
-  deployedAt: number;
-  txHash: string;
-  destructAddress?: string;
-  duration?: number;
-} | null>(null);
+export const selectedWalletAtom = atom<Wallet | null>(null);

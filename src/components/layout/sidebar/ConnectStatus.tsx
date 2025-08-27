@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronRight, Copy, Plus, X } from "lucide-react";
 import { useAtom, useAtomValue } from "jotai";
 import {
@@ -7,6 +7,7 @@ import {
 } from "../../../atoms/walletAtoms";
 import { WalletDeployment } from "../../wallet";
 import { useWalletAccount } from "../../../hooks/useWalletAccount";
+import { useWalletsApi } from "../../../hooks/useWalletsApi";
 import useConnectWallet from "../../../hooks/useConnect";
 
 const ConnectStatus = () => {
@@ -16,19 +17,23 @@ const ConnectStatus = () => {
   const [showDeployModal, setShowDeployModal] = useState(false);
 
   // 실제 지갑 연결 상태 확인
-  const { isConnected } = useWalletAccount();
+  const { isConnected, account } = useWalletAccount();
   const connectWallet = useConnectWallet();
+  const { loadWallets } = useWalletsApi();
 
   const chainId = "1001"; // Klaytn Baobab testnet
   const wallets = deployedWalletsByChain(chainId);
   const walletEntries = Object.entries(wallets);
 
-  const handleWalletSelect = (address: string, walletData: any) => {
-    setSelectedWallet({
-      chainId,
-      address,
-      ...walletData,
-    });
+  // 지갑이 연결되면 해당 사용자의 지갑 목록을 로드
+  useEffect(() => {
+    if (isConnected && account) {
+      loadWallets(chainId, account);
+    }
+  }, [isConnected, account, chainId, loadWallets]);
+
+  const handleWalletSelect = (_address: string, walletData: any) => {
+    setSelectedWallet(walletData);
     setShowWalletList(false);
   };
 

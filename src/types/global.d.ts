@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 declare global {
   interface Window {
     klaytn?: {
@@ -16,8 +18,8 @@ declare global {
 }
 
 interface ImportMetaEnv {
-  readonly VITE_API_URL: string;
-  readonly VITE_ENV: string;
+  readonly VITE_API_URL?: string;
+  readonly VITE_ENV?: string;
 }
 
 interface ImportMeta {

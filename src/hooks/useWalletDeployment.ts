@@ -1,17 +1,14 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useCallback } from "react";
-import {
-  deploymentStatusAtom,
-  addDeployedWalletAtom,
-  selectedWalletAtom,
-} from "../atoms/walletAtoms";
+import { deploymentStatusAtom, selectedWalletAtom } from "../atoms/walletAtoms";
+import { useWalletsApi } from "./useWalletsApi";
 import { SAFE_WALLET_FACTORY } from "../constants/contracts";
 import { ethers } from "ethers";
 
 export const useWalletDeployment = () => {
   const [deploymentStatus, setDeploymentStatus] = useAtom(deploymentStatusAtom);
-  const [, addDeployedWallet] = useAtom(addDeployedWalletAtom);
-  const [, setSelectedWallet] = useAtom(selectedWalletAtom);
+  const setSelectedWallet = useSetAtom(selectedWalletAtom);
+  const { addWallet } = useWalletsApi();
 
   const deployContract = useCallback(
     async (
@@ -73,10 +70,9 @@ export const useWalletDeployment = () => {
             factoryContract
           );
 
-          // 4. Jotai store에 추가
+          // 4. API를 통해 지갑 추가 (실제 배포된 주소 포함)
           const walletData = {
             chainId,
-            address: deployedAddress,
             name: `Custom Wallet ${deployedAddress.slice(
               0,
               6
@@ -85,21 +81,15 @@ export const useWalletDeployment = () => {
             txHash: tx.hash,
             destructAddress: destruct_address,
             duration,
+            address: deployedAddress, // 실제 배포된 주소 추가
           };
 
-          addDeployedWallet(walletData);
+          const newWallet = await addWallet(walletData);
 
           // 5. 새로 배포된 지갑을 자동으로 선택
-          setSelectedWallet({
-            chainId,
-            address: deployedAddress,
-            name: walletData.name,
-            creator: account,
-            deployedAt: Date.now(),
-            txHash: tx.hash,
-            destructAddress: destruct_address,
-            duration,
-          });
+          if (newWallet) {
+            setSelectedWallet(newWallet);
+          }
 
           // 최종 상태 업데이트
           setDeploymentStatus({
@@ -120,7 +110,7 @@ export const useWalletDeployment = () => {
         });
       }
     },
-    [setDeploymentStatus, addDeployedWallet, setSelectedWallet]
+    [setDeploymentStatus, addWallet, setSelectedWallet]
   );
 
   const resetDeploymentStatus = useCallback(() => {
