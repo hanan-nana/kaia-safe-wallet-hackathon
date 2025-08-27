@@ -10,35 +10,34 @@ const ConnectOnlyLayout = () => {
       {/* 중앙 연결 화면 */}
       <div className="relative z-10 flex items-center justify-center w-full bg-glass-intermediate backdrop-blur-lg">
         <div className="text-center space-y-8">
-          {/* 로고 */}
-          <h2
-            className="text-sm font-semibold text-green-gray-600"
-            style={{
-              fontFamily: "Boldonse, sans-serif",
-              letterSpacing: "-0.04em",
-              lineHeight: "1.4",
-            }}
-          >
-            Welcome to
-          </h2>
-          <div
-            className="text-4xl font-bold mb-8 text-primary"
-            style={{
-              fontFamily: "Boldonse, sans-serif",
-              letterSpacing: "-0.04em",
-              lineHeight: "50px",
-            }}
-          >
-            HOHO Wallet
+          <div className="text-center space-y-4">
+            <h2
+              className="text-sm font-semibold text-primary"
+              style={{
+                fontFamily: "Boldonse, sans-serif",
+                letterSpacing: "-0.04em",
+                lineHeight: "1.4",
+              }}
+            >
+              Welcome to
+            </h2>
+            <div
+              className="text-4xl font-bold mb-8 text-primary"
+              style={{
+                fontFamily: "Boldonse, sans-serif",
+                letterSpacing: "-0.04em",
+                lineHeight: "50px",
+              }}
+            >
+              HOHO Wallet
+            </div>
           </div>
 
           {/* 연결 메시지 */}
-          <div className="space-y-4">
-            <p className="text-green-gray-400 max-w-md mx-auto">
-              Connect your wallet to access Safe Wallet management and
-              transaction features
-            </p>
-          </div>
+          <p className="text-green-gray-400 max-w-md mx-auto mt-4">
+            Connect your wallet to access Safe Wallet management and transaction
+            features
+          </p>
 
           {/* 연결 버튼 */}
           <div className="pt-4">

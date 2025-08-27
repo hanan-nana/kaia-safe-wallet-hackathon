@@ -27,6 +27,10 @@ export default {
           800: "#2D3230",
           900: "#131816",
         },
+        primary: "#6AB390",
+        "primary-dark": "#60A181",
+        secondary: "#ACD769",
+        supplementary: "#EAFEF2",
 
         glass: {
           // 기본 글래스 배경
