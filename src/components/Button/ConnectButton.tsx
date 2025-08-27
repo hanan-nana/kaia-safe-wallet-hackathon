@@ -77,5 +77,4 @@ const ConnectButton = () => {
     </button>
   );
 };
-
 export default ConnectButton;
