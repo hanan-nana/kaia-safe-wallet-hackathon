@@ -62,27 +62,27 @@ const WalletInfo = () => {
   }
 
   return (
-    <div className="bg-glass-dark-secondary rounded-xl p-4">
+    <div className="bg-glass-weak shadow-glass rounded-xl p-4">
       {/* 지갑 이름과 주소 */}
       <div className="mb-4">
-        <div className="text-center">
+        <div className="flex items-center gap-3">
           {/* 아바타 */}
-          <div className="w-12 h-12 rounded-full bg-primary-dark flex items-center justify-center text-white font-bold text-lg mx-auto mb-2">
+          <div className="w-10 h-10 rounded-full bg-primary-dark flex items-center justify-center text-white font-bold flex-shrink-0">
             {(walletLabel || "W").charAt(0).toUpperCase()}
           </div>
 
           {/* 지갑 정보 */}
-          <div>
-            <div className="text-lg font-semibold text-green-gray-900">
+          <div className="flex-1 min-w-0">
+            <div className="font-semibold text-green-gray-900 truncate">
               {walletLabel || "Connected Wallet"}
             </div>
-            <div className="flex items-center justify-center gap-1">
-              <div className="text-sm font-regular text-green-gray-600">
+            <div className="flex items-center gap-1">
+              <div className="text-sm font-regular text-green-gray-600 truncate">
                 {account.slice(0, 8)}...{account.slice(-6)}
               </div>
               <button
                 onClick={() => copyToClipboard(account)}
-                className="p-1.5 hover:bg-black/10 rounded-md transition-colors"
+                className="p-1.5 hover:bg-black/10 rounded-md transition-colors flex-shrink-0"
                 title={copied ? "복사됨" : "주소 복사"}
               >
                 {copied ? (
@@ -102,7 +102,7 @@ const WalletInfo = () => {
         <div className="flex justify-between items-center">
           <span className="text-xs text-green-gray-600">네트워크</span>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+            <div className="w-2 h-2 bg-primary rounded-full"></div>
             <span className="text-sm font-medium text-green-gray-700">
               {getNetworkName(chainId)}
             </span>
@@ -121,7 +121,7 @@ const WalletInfo = () => {
         <div className="flex justify-between items-center">
           <span className="text-xs text-green-gray-600">라인 계정</span>
           {isLineConnected && lineAccount ? (
-            <span className="px-2 py-1 text-xs font-medium bg-green-500 text-white rounded-full">
+            <span className="px-2 py-1 text-xs font-medium bg-primary text-white rounded-full">
               연결됨
             </span>
           ) : (

@@ -8,7 +8,7 @@ const ConnectOnlyLayout = () => {
       <Background />
 
       {/* 중앙 연결 화면 */}
-      <div className="relative z-10 flex items-center justify-center w-full bg-glass-intermediate backdrop-blur-lg">
+      <div className="relative z-10 flex items-center justify-center w-full backdrop-blur-lg">
         <div className="text-center space-y-8">
           <div className="text-center space-y-4">
             <h2

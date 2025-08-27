@@ -34,7 +34,7 @@ export default {
 
         glass: {
           // 기본 글래스 배경
-          strong: "rgba(255, 255, 255, 0.7)",
+          strong: "rgba(255, 255, 255, 0.6)",
           intermediate: "rgba(255, 255, 255, 0.5)",
           weak: "rgba(255, 255, 255, 0.2)",
 

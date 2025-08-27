@@ -22,7 +22,7 @@ const Layout = ({ children }: LayoutProps) => {
       <Background />
 
       {/* 콘텐츠 레이어 */}
-      <div className="relative z-10 flex w-full bg-glass-intermediate backdrop-blur-lg p-2 gap-3">
+      <div className="relative z-10 flex w-full backdrop-blur-lg p-2 gap-3">
         <Sidebar />
         <div className="flex-1 bg-glass-intermediate overflow-auto shadow-glass rounded-xl">
           {children}

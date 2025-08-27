@@ -15,7 +15,12 @@ export const useWalletDeployment = () => {
   const [wallets, setWallets] = useAtom(walletsAtom);
 
   const deployContract = useCallback(
-    async (destruct_address: string, duration: number, account: string) => {
+    async (
+      destruct_address: string,
+      duration: number,
+      account: string,
+      walletName: string
+    ) => {
       // 초기 상태 설정
       setDeploymentStatus({
         isDeploying: true,
@@ -72,10 +77,12 @@ export const useWalletDeployment = () => {
           // 4. Jotai atom에 저장
           const newWallet: Wallet = {
             address: deployedAddress,
-            name: `Custom Wallet ${deployedAddress.slice(
-              0,
-              6
-            )}...${deployedAddress.slice(-4)}`,
+            name:
+              walletName ||
+              `Custom Wallet ${deployedAddress.slice(
+                0,
+                6
+              )}...${deployedAddress.slice(-4)}`,
             deployedAt: Date.now(),
             destructAddress: destruct_address,
             duration,
