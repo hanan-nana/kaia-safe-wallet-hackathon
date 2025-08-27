@@ -62,12 +62,6 @@ const ConnectStatus = () => {
             <p className="text-sm text-green-gray-400 mb-4">
               Deploy your first Safe wallet to get started
             </p>
-            <button
-              onClick={() => setShowDeployModal(true)}
-              className="px-8 py-2 bg-primary hover:bg-primary-dark text-white rounded-full transition-colors font-medium"
-            >
-              Create Account
-            </button>
           </div>
         )}
 
