@@ -1,14 +1,40 @@
-import { Copy, Check } from "lucide-react";
-import { useState } from "react";
+import { Copy, Check, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAtom } from "jotai";
+import { lineAccountAtom, isLineConnectedAtom } from "../../../atoms/lineAtoms";
 import { useWalletAccount } from "../../../hooks/useWalletAccount";
 import { useWalletBalance } from "../../../hooks/useWalletBalance";
 import useDisconnectWallet from "../../../hooks/useDisconnectWallet";
+import LineConnectModal from "../../LineConnectModal";
+import { getLineAccountStatus } from "../../../api/line";
 
 const WalletInfo = () => {
   const { account, walletLabel, chainId, isConnected } = useWalletAccount();
   const { balance, loading } = useWalletBalance();
   const disconnect = useDisconnectWallet();
   const [copied, setCopied] = useState(false);
+  const [showLineModal, setShowLineModal] = useState(false);
+  const [lineAccount, setLineAccount] = useAtom(lineAccountAtom);
+  const [isLineConnected, setIsLineConnected] = useAtom(isLineConnectedAtom);
+
+  // 컴포넌트 마운트 시 로컬 스토리지에서 라인 계정 상태 불러오기
+  useEffect(() => {
+    const loadLineAccountStatus = async () => {
+      if (account) {
+        try {
+          const storedLineAccount = await getLineAccountStatus(account);
+          if (storedLineAccount) {
+            setLineAccount(storedLineAccount);
+            setIsLineConnected(true);
+          }
+        } catch (error) {
+          console.error("Failed to load line account status:", error);
+        }
+      }
+    };
+
+    loadLineAccountStatus();
+  }, [account, setLineAccount, setIsLineConnected]);
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -94,11 +120,27 @@ const WalletInfo = () => {
         {/* 라인 계정 */}
         <div className="flex justify-between items-center">
           <span className="text-xs text-green-gray-600">라인 계정</span>
-          <span className="text-sm font-medium text-green-gray-700">
-            {account.slice(0, 6)}...{account.slice(-4)}
-          </span>
+          {isLineConnected && lineAccount ? (
+            <span className="px-2 py-1 text-xs font-medium bg-green-500 text-white rounded-full">
+              연결됨
+            </span>
+          ) : (
+            <button
+              onClick={() => setShowLineModal(true)}
+              className="flex items-center gap-1 px-2 py-1 text-xs text-primary hover:bg-primary/10 rounded-lg transition-colors"
+            >
+              <Plus className="w-3 h-3" />
+              연결하기
+            </button>
+          )}
         </div>
       </div>
+
+      {/* 라인 연결 모달 */}
+      <LineConnectModal
+        isOpen={showLineModal}
+        onClose={() => setShowLineModal(false)}
+      />
     </div>
   );
 };

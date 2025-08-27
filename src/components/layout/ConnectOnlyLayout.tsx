@@ -40,7 +40,7 @@ const ConnectOnlyLayout = () => {
           </p>
 
           {/* 연결 버튼 */}
-          <div className="pt-4">
+          <div className="pt-2">
             <ConnectButton />
           </div>
         </div>
