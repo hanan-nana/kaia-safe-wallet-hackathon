@@ -34,8 +34,8 @@ export const useQueueApi = (
     setError(null);
 
     try {
-      const response = await fetchQueueAuto(walletAddress);
-      setQueue(response.data);
+      const queueItems = await fetchQueueAuto(walletAddress);
+      setQueue(queueItems);
     } catch (err) {
       setError("error Occurred");
       setQueue([]);

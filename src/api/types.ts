@@ -1,12 +1,19 @@
 // Queue API Types
+export interface QueueItemRaw {
+  index: number;
+  riskScore: number; // 0-100 또는 -1 (pending)
+  description: string;
+}
+
 export interface QueueItem {
   index: number;
-  type: "safe" | "risky" | "dangerous";
+  type: "safe" | "risky" | "dangerous" | "pending";
+  riskScore: number;
   description: string;
 }
 
 export interface QueueApiResponse {
-  data: QueueItem[];
+  data: QueueItemRaw[];
 }
 
 export interface DeleteQueueItemResponse {
@@ -24,27 +31,11 @@ export interface QueueApiError {
 export interface Wallet {
   address: string;
   name: string;
-  creator: string;
   deployedAt: number;
-  txHash: string;
   destructAddress?: string;
   duration?: number;
-  chainId: string;
 }
 
 export interface WalletApiResponse {
-  data: { [address: string]: Wallet };
-}
-
-export interface CreateWalletRequest {
-  chainId: string;
-  name: string;
-  creator: string;
-  txHash: string;
-  destructAddress?: string;
-  duration?: number;
-}
-
-export interface CreateWalletResponse {
-  data: Wallet;
+  data: Wallet[];
 }

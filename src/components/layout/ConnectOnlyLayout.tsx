@@ -11,14 +11,30 @@ const ConnectOnlyLayout = () => {
       <div className="relative z-10 flex items-center justify-center w-full bg-glass-intermediate backdrop-blur-lg">
         <div className="text-center space-y-8">
           {/* 로고 */}
-          <div className="text-4xl font-bold mb-8">HOHO Wallet</div>
+          <h2
+            className="text-sm font-semibold text-green-gray-600"
+            style={{
+              fontFamily: "Boldonse, sans-serif",
+              letterSpacing: "-0.04em",
+              lineHeight: "1.4",
+            }}
+          >
+            Welcome to
+          </h2>
+          <div
+            className="text-4xl font-bold mb-8 text-primary"
+            style={{
+              fontFamily: "Boldonse, sans-serif",
+              letterSpacing: "-0.04em",
+              lineHeight: "50px",
+            }}
+          >
+            HOHO Wallet
+          </div>
 
           {/* 연결 메시지 */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-green-gray-900">
-              Welcome to HOHO Wallet
-            </h2>
-            <p className="text-green-gray-600 max-w-md mx-auto">
+            <p className="text-green-gray-400 max-w-md mx-auto">
               Connect your wallet to access Safe Wallet management and
               transaction features
             </p>

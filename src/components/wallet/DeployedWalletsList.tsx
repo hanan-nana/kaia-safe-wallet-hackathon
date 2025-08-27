@@ -1,15 +1,12 @@
 import { useAtomValue } from "jotai";
-import { deployedWalletsByChainAtom } from "../../atoms/walletAtoms";
+import { deployedWalletsAtom } from "../../atoms/walletAtoms";
 
-interface DeployedWalletsListProps {
-  chainId: string;
-}
+interface DeployedWalletsListProps {}
 
-export const DeployedWalletsList = ({ chainId }: DeployedWalletsListProps) => {
-  const deployedWalletsByChain = useAtomValue(deployedWalletsByChainAtom);
-  const wallets = deployedWalletsByChain(chainId);
+export const DeployedWalletsList = ({}: DeployedWalletsListProps) => {
+  const wallets = useAtomValue(deployedWalletsAtom);
 
-  if (Object.keys(wallets).length === 0) {
+  if (wallets.length === 0) {
     return (
       <div className="empty-state">
         <p>No deployed wallets found</p>
@@ -19,19 +16,16 @@ export const DeployedWalletsList = ({ chainId }: DeployedWalletsListProps) => {
 
   return (
     <div className="deployed-wallets-list">
-      <h3>Deployed Wallets ({Object.keys(wallets).length})</h3>
+      <h3>Deployed Wallets ({wallets.length})</h3>
 
-      {Object.entries(wallets).map(([address, wallet]) => (
-        <div key={address} className="wallet-card">
+      {wallets.map((wallet) => (
+        <div key={wallet.address} className="wallet-card">
           <div className="wallet-header">
             <h4>{wallet.name}</h4>
-            <span className="wallet-address">{address}</span>
+            <span className="wallet-address">{wallet.address}</span>
           </div>
 
           <div className="wallet-details">
-            <p>
-              <strong>Creator:</strong> {wallet.creator}
-            </p>
             <p>
               <strong>Deployed:</strong>{" "}
               {new Date(wallet.deployedAt).toLocaleString()}
@@ -50,15 +44,7 @@ export const DeployedWalletsList = ({ chainId }: DeployedWalletsListProps) => {
 
           <div className="wallet-actions">
             <a
-              href={`https://baobab.scope.klaytn.com/tx/${wallet.txHash}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary"
-            >
-              View Transaction
-            </a>
-            <a
-              href={`https://baobab.scope.klaytn.com/account/${address}`}
+              href={`https://baobab.scope.klaytn.com/account/${wallet.address}`}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-primary"

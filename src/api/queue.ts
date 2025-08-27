@@ -1,10 +1,40 @@
-import { QueueApiResponse, DeleteQueueItemResponse, QueueItem } from "./types";
+import {
+  QueueApiResponse,
+  DeleteQueueItemResponse,
+  QueueItem,
+  QueueItemRaw,
+} from "./types";
 
 // Base API URL - 실제 환경에서는 환경변수로 관리
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Mock API 사용 여부 설정
 const USE_MOCK_API = true; // false로 변경하면 실제 API 사용
+
+/**
+ * riskScore를 type으로 분류하는 함수
+ * @param riskScore -1(pending) 또는 0-100 사이의 점수
+ * @returns "pending" | "safe" | "risky" | "dangerous"
+ */
+export const classifyRiskScore = (riskScore: number): QueueItem["type"] => {
+  if (riskScore === -1) return "pending";
+  if (riskScore >= 0 && riskScore <= 30) return "safe";
+  if (riskScore >= 31 && riskScore <= 70) return "risky";
+  if (riskScore >= 71 && riskScore <= 100) return "dangerous";
+  return "pending"; // fallback
+};
+
+/**
+ * Raw API 응답을 UI용 데이터로 변환
+ * @param rawItems API에서 받은 원본 데이터
+ * @returns UI에서 사용할 QueueItem 배열
+ */
+export const transformQueueItems = (rawItems: QueueItemRaw[]): QueueItem[] => {
+  return rawItems.map((item) => ({
+    ...item,
+    type: classifyRiskScore(item.riskScore),
+  }));
+};
 
 /**
  * 특정 Safe Wallet 주소의 거래 큐를 조회합니다
@@ -18,8 +48,9 @@ const USE_MOCK_API = true; // false로 변경하면 실제 API 사용
  * // 응답 예시:
  * // {
  * //   "data": [
- * //     { "index": 0, "type": "safe", "description": "Transfer 100 KAIA to trusted address" },
- * //     { "index": 1, "type": "risky", "description": "Approve token spending for DeFi protocol" }
+ * //     { "index": 0, "riskScore": 15, "description": "Transfer 100 KAIA to trusted address" },
+ * //     { "index": 1, "riskScore": 85, "description": "Approve token spending for DeFi protocol" },
+ * //     { "index": 2, "riskScore": -1, "description": "Pending transaction analysis" }
  * //   ]
  * // }
  */
@@ -65,11 +96,6 @@ export const fetchQueue = async (
  * // DELETE http://example.com/api/queue/0?walletAddress=0x742d35Cc6874C41532CF90
  *
  * // 서버 응답: 204 No Content (응답 본문 없음)
- * // 클라이언트에서 자동 생성하는 응답:
- * // {
- * //   "success": true,
- * //   "message": "Queue item 0 deleted successfully"
- * // }
  */
 export const deleteQueueItem = async (
   walletAddress: string,
@@ -112,7 +138,7 @@ export const deleteQueueItem = async (
 /**
  * 큐 조회 API - Mock/실제 API 자동 분기
  * @param walletAddress Safe Wallet 주소
- * @returns 거래 큐 목록
+ * @returns 거래 큐 목록 (UI용으로 변환된 데이터)
  *
  * @description
  * USE_MOCK_API = true: Mock 데이터 반환 (개발용)
@@ -121,10 +147,12 @@ export const deleteQueueItem = async (
  */
 export const fetchQueueAuto = async (
   walletAddress: string
-): Promise<QueueApiResponse> => {
-  return USE_MOCK_API
-    ? fetchQueueMock(walletAddress)
-    : fetchQueue(walletAddress);
+): Promise<QueueItem[]> => {
+  const rawResponse = USE_MOCK_API
+    ? await fetchQueueMock(walletAddress)
+    : await fetchQueue(walletAddress);
+
+  return transformQueueItems(rawResponse.data);
 };
 
 /**
@@ -153,27 +181,36 @@ export const fetchQueueMock = async (
   // 실제 API 서버가 없을 때 사용할 목업 데이터
   await new Promise((resolve) => setTimeout(resolve, 500)); // 네트워크 지연 시뮬레이션
 
-  const mockData: QueueItem[] = [
+  const mockData: QueueItemRaw[] = [
     {
       index: 0,
-      type: "safe",
+      riskScore: 15, // safe (0-30)
       description: "Transfer 100 KAIA to trusted address",
     },
     {
       index: 1,
-      type: "risky",
+      riskScore: 55, // risky (31-70)
       description: "Approve token spending for DeFi protocol",
     },
-    { index: 2, type: "risky", description: "Swap 50 KAIA for USDT" },
+    {
+      index: 2,
+      riskScore: 45, // risky (31-70)
+      description: "Swap 50 KAIA for USDT",
+    },
     {
       index: 3,
-      type: "dangerous",
+      riskScore: 85, // dangerous (71-100)
       description: "Mint NFT from suspicious contract",
     },
     {
       index: 4,
-      type: "safe",
+      riskScore: 20, // safe (0-30)
       description: "Send transaction to multisig wallet",
+    },
+    {
+      index: 5,
+      riskScore: -1, // pending
+      description: "Analyzing transaction risk...",
     },
   ];
 

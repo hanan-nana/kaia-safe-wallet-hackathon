@@ -15,7 +15,7 @@ export const deploymentStatusAtom = atom<{
 });
 
 // API로부터 가져온 지갑들을 저장하는 atom
-export const walletsAtom = atom<{ [address: string]: Wallet }>({});
+export const walletsAtom = atom<Wallet[]>([]);
 
 // 지갑 로딩 상태
 export const walletsLoadingAtom = atom<boolean>(false);
@@ -23,13 +23,10 @@ export const walletsLoadingAtom = atom<boolean>(false);
 // 지갑 API 에러 상태
 export const walletsErrorAtom = atom<string | null>(null);
 
-// 특정 체인의 배포된 지갑들만 가져오는 derived atom
-export const deployedWalletsByChainAtom = atom((get) => {
+// 배포된 지갑들을 가져오는 derived atom (chainId 필터링 제거)
+export const deployedWalletsAtom = atom((get) => {
   const wallets = get(walletsAtom);
-  return (chainId: string) =>
-    Object.fromEntries(
-      Object.entries(wallets).filter(([, wallet]) => wallet.chainId === chainId)
-    );
+  return wallets;
 });
 
 // 선택된 지갑 atom

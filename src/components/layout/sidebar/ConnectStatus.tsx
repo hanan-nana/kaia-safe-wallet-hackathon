@@ -1,36 +1,28 @@
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { ChevronRight, Copy, Plus, X } from "lucide-react";
 import { useAtom, useAtomValue } from "jotai";
-import {
-  selectedWalletAtom,
-  deployedWalletsByChainAtom,
-} from "../../../atoms/walletAtoms";
+import { selectedWalletAtom, walletsAtom } from "../../../atoms/walletAtoms";
 import { WalletDeployment } from "../../wallet";
 import { useWalletAccount } from "../../../hooks/useWalletAccount";
-import { useWalletsApi } from "../../../hooks/useWalletsApi";
 import useConnectWallet from "../../../hooks/useConnect";
 
 const ConnectStatus = () => {
   const [selectedWallet, setSelectedWallet] = useAtom(selectedWalletAtom);
-  const deployedWalletsByChain = useAtomValue(deployedWalletsByChainAtom);
+  const allWallets = useAtomValue(walletsAtom);
   const [showWalletList, setShowWalletList] = useState(false);
   const [showDeployModal, setShowDeployModal] = useState(false);
 
   // 실제 지갑 연결 상태 확인
-  const { isConnected, account } = useWalletAccount();
+  const { isConnected } = useWalletAccount();
   const connectWallet = useConnectWallet();
-  const { loadWallets } = useWalletsApi();
 
-  const chainId = "1001"; // Klaytn Baobab testnet
-  const wallets = deployedWalletsByChain(chainId);
-  const walletEntries = Object.entries(wallets);
+  // 모든 지갑 목록을 사용 (필터링 제거)
+  const wallets = allWallets;
 
-  // 지갑이 연결되면 해당 사용자의 지갑 목록을 로드
-  useEffect(() => {
-    if (isConnected && account) {
-      loadWallets(chainId, account);
-    }
-  }, [isConnected, account, chainId, loadWallets]);
+  // 새 지갑 배포 후 목록 갱신을 위한 함수 (Jotai는 자동으로 반응하므로 빈 함수)
+  const handleWalletDeployed = useCallback(() => {
+    // Jotai atom이 자동으로 업데이트되므로 별도 작업 불필요
+  }, []);
 
   const handleWalletSelect = (_address: string, walletData: any) => {
     setSelectedWallet(walletData);
@@ -67,7 +59,7 @@ const ConnectStatus = () => {
   }
 
   // 지갑은 연결되었지만 Safe wallet이 없는 경우
-  if (!selectedWallet && walletEntries.length === 0) {
+  if (!selectedWallet && wallets.length === 0) {
     return (
       <>
         <div className="p-4 bg-glass-dark-secondary rounded-xl">
@@ -104,7 +96,12 @@ const ConnectStatus = () => {
                 </button>
               </div>
               <div className="p-4">
-                <WalletDeployment onSuccess={() => setShowDeployModal(false)} />
+                <WalletDeployment
+                  onSuccess={() => {
+                    setShowDeployModal(false);
+                    handleWalletDeployed();
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -114,7 +111,7 @@ const ConnectStatus = () => {
   }
 
   // 지갑이 연결되었고 Safe wallet 목록이 있지만 선택되지 않은 경우
-  if (isConnected && !selectedWallet && walletEntries.length > 0) {
+  if (isConnected && !selectedWallet && wallets.length > 0) {
     return (
       <>
         <div className="p-4 bg-glass-dark-secondary rounded-xl">
@@ -137,10 +134,10 @@ const ConnectStatus = () => {
           </div>
 
           <div className="space-y-2">
-            {walletEntries.map(([address, wallet]) => (
+            {wallets.map((wallet) => (
               <button
-                key={address}
-                onClick={() => handleWalletSelect(address, wallet)}
+                key={wallet.address}
+                onClick={() => handleWalletSelect(wallet.address, wallet)}
                 className="w-full p-3 bg-white/50 hover:bg-white/70 rounded-lg transition-colors text-left"
               >
                 <div className="flex items-center gap-3">
@@ -152,7 +149,7 @@ const ConnectStatus = () => {
                       {wallet.name}
                     </p>
                     <p className="text-xs text-green-gray-600 truncate">
-                      {address.slice(0, 6)}...{address.slice(-4)}
+                      {wallet.address.slice(0, 6)}...{wallet.address.slice(-4)}
                     </p>
                   </div>
                   <ChevronRight className="w-4 h-4 text-green-gray-400" />
@@ -176,7 +173,12 @@ const ConnectStatus = () => {
                 </button>
               </div>
               <div className="p-4">
-                <WalletDeployment onSuccess={() => setShowDeployModal(false)} />
+                <WalletDeployment
+                  onSuccess={() => {
+                    setShowDeployModal(false);
+                    handleWalletDeployed();
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -234,7 +236,7 @@ const ConnectStatus = () => {
             </button>
 
             {/* Change Wallet Button */}
-            {walletEntries.length > 1 && (
+            {wallets.length > 1 && (
               <button
                 onClick={() => setShowWalletList(!showWalletList)}
                 className="p-2 hover:bg-white/20 rounded-lg transition-colors"
@@ -251,14 +253,14 @@ const ConnectStatus = () => {
         </div>
 
         {/* Wallet List (when expanded) */}
-        {showWalletList && walletEntries.length > 1 && (
+        {showWalletList && wallets.length > 1 && (
           <div className="mb-4 space-y-2">
-            {walletEntries
-              .filter(([address]) => address !== selectedWallet.address)
-              .map(([address, wallet]) => (
+            {wallets
+              .filter((wallet) => wallet.address !== selectedWallet.address)
+              .map((wallet) => (
                 <button
-                  key={address}
-                  onClick={() => handleWalletSelect(address, wallet)}
+                  key={wallet.address}
+                  onClick={() => handleWalletSelect(wallet.address, wallet)}
                   className="w-full p-2 bg-white/30 hover:bg-white/50 rounded-lg transition-colors text-left"
                 >
                   <div className="flex items-center gap-2">
@@ -270,7 +272,8 @@ const ConnectStatus = () => {
                         {wallet.name}
                       </p>
                       <p className="text-xs text-green-gray-600 truncate">
-                        {address.slice(0, 6)}...{address.slice(-4)}
+                        {wallet.address.slice(0, 6)}...
+                        {wallet.address.slice(-4)}
                       </p>
                     </div>
                   </div>
@@ -299,7 +302,12 @@ const ConnectStatus = () => {
               </button>
             </div>
             <div className="p-4">
-              <WalletDeployment onSuccess={() => setShowDeployModal(false)} />
+              <WalletDeployment
+                onSuccess={() => {
+                  setShowDeployModal(false);
+                  handleWalletDeployed();
+                }}
+              />
             </div>
           </div>
         </div>

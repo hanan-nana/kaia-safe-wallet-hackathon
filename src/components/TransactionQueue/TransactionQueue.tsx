@@ -18,6 +18,8 @@ const TransactionQueue = () => {
         return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
       case "dangerous":
         return <XCircle className="w-4 h-4 text-red-500" />;
+      case "pending":
+        return <Shield className="w-4 h-4 text-blue-500" />;
       default:
         return <Shield className="w-4 h-4 text-gray-400" />;
     }
@@ -31,6 +33,8 @@ const TransactionQueue = () => {
         return "bg-yellow-50 border-yellow-200";
       case "dangerous":
         return "bg-red-50 border-red-200";
+      case "pending":
+        return "bg-blue-50 border-blue-200";
       default:
         return "bg-gray-50 border-gray-200";
     }
@@ -44,9 +48,16 @@ const TransactionQueue = () => {
         return "Risky";
       case "dangerous":
         return "Dangerous";
+      case "pending":
+        return "Pending";
       default:
         return "Unknown";
     }
+  };
+
+  const formatRiskScore = (riskScore: number) => {
+    if (riskScore === -1) return "분석 중";
+    return `${riskScore}점`;
   };
 
   // Safe Wallet이 선택되지 않은 경우
@@ -132,10 +143,15 @@ const TransactionQueue = () => {
                         ? "text-yellow-700"
                         : item.type === "dangerous"
                         ? "text-red-700"
+                        : item.type === "pending"
+                        ? "text-blue-700"
                         : "text-gray-700"
                     }`}
                   >
                     {getStatusText(item.type)}
+                  </span>
+                  <span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">
+                    {formatRiskScore(item.riskScore)}
                   </span>
                 </div>
 
