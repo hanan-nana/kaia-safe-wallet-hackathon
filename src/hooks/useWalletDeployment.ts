@@ -83,7 +83,6 @@ export const useWalletDeployment = () => {
                 0,
                 6
               )}...${deployedAddress.slice(-4)}`,
-            deployedAt: Date.now(),
             destructAddress: destruct_address,
             duration,
           };

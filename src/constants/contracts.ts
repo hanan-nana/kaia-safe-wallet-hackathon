@@ -1,7 +1,7 @@
 // Safe Wallet Factory Contract Constants
 export const SAFE_WALLET_FACTORY = {
   // Klaytn Baobab Testnet
-  ADDRESS: "0xE9E7f3c98aB8b6f8Bc8a1CB1D9d8E025D10A712D",
+  ADDRESS: "0x725C7A0e548481b80314bE54939dD1c3654f8462",
   ABI: [
     {
       anonymous: false,

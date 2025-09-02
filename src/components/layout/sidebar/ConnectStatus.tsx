@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ChevronRight, Copy, Plus, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { useAtom, useAtomValue } from "jotai";
 import { selectedWalletAtom, walletsAtom } from "../../../atoms/walletAtoms";
 import { WalletDeployment } from "../../wallet";
@@ -13,7 +13,7 @@ const ConnectStatus = () => {
 
   // 실제 지갑 연결 상태 확인
   const { isConnected } = useWalletAccount();
-  const connectWallet = useConnectWallet();
+  useConnectWallet();
 
   // 모든 지갑 목록을 사용 (필터링 제거)
   const wallets = allWallets;
@@ -25,10 +25,6 @@ const ConnectStatus = () => {
 
   const handleWalletSelect = (_address: string, walletData: any) => {
     setSelectedWallet(walletData);
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
   };
 
   // 지갑이 연결되지 않은 경우

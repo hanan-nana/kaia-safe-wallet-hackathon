@@ -14,8 +14,8 @@ const LineConnectModal = ({ isOpen, onClose }: LineConnectModalProps) => {
   const [lineId, setLineId] = useState("");
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState("");
-  const [lineAccount, setLineAccount] = useAtom(lineAccountAtom);
-  const [isLineConnected, setIsLineConnected] = useAtom(isLineConnectedAtom);
+  const [, setLineAccount] = useAtom(lineAccountAtom);
+  const [, setIsLineConnected] = useAtom(isLineConnectedAtom);
   const { account } = useWalletAccount();
 
   const handleConnect = async () => {
